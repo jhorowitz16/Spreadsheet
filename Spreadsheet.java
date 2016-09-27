@@ -18,7 +18,7 @@ public class Spreadsheet{
     }
 
     public static boolean isOperator(String s) {
-        if (s == "+" || s == "-" || s == "*" || s == "/")
+        if (s.equals("+") || s.equals("-") || s.equals("*") | s.equals("/"))
             return true;    
         return false;
     }
@@ -53,8 +53,6 @@ public class Spreadsheet{
         if (!validRowCol(rows, cols))
             throw new IllegalArgumentException("bad row/col input"); 
 
-        System.out.println("rows: " + rows + ", " + "cols: " + cols);
-
         String[] input = new String[rows*cols];
         Cell[][] cells = new Cell[rows][cols];
 
@@ -71,11 +69,6 @@ public class Spreadsheet{
                 // System.out.print(cellString);
                 locationMap.put(cellString, cells[i][j]);
             }
-        }
-
-        System.out.println("\nYour input:");
-        for (String s : input) {
-            System.out.println(s);
         }
         return cells;
     }
@@ -146,19 +139,21 @@ public class Spreadsheet{
                 double op2 = (double)tokenStack.pop(); 
                 double op1 = (double)tokenStack.pop();
                 double result = Integer.MAX_VALUE; // some default
-                if (word == "+")
+                if (word.equals("+")){
                     result = op1 + op2;
-                else if (word == "-")
+                    
+                }
+                else if (word.equals("-"))
                     result = op1 - op2;
-                else if (word == "*")
+                else if (word.equals("*"))
                     result = op1 * op2;
-                else if (word == "/")
+                else if (word.equals("/"))
                     result = op1 / op2;
                 tokenStack.push(new Double(result));
             }
-            else 
-                System.out.println("word here is " + word);
+            else { 
                 tokenStack.push(Double.parseDouble(word));
+            }
         }
         if (tokenStack.size() == 1) 
             return (double)tokenStack.pop();
