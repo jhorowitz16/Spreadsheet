@@ -1,5 +1,4 @@
-import java.io.BufferedInputStream;
-import java.util.Scanner;
+import java.util.*;
 
 public class Spreadsheet{
 
@@ -8,13 +7,7 @@ public class Spreadsheet{
         Cell b = new Cell("2");
         Cell c = new Cell("A2");
         Cell d = new Cell("D5");
-
-        System.out.print(a.getLiteral());
-        System.out.print(b.getLiteral());
-        System.out.print(c.getLiteral());
-        System.out.println(d.getLiteral());
     }
-
 
     public static boolean validRowCol(int rows, int cols) {
         if (rows <= -1)
@@ -23,6 +16,13 @@ public class Spreadsheet{
             return false;
         return true;
     }
+
+
+    // found on stackoverflow - for converting "row 0" to row A
+    private static String getCharForNumber(int i) {
+        return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
+    }
+
 
     // return a 2d array of cells based on the input
     public static Cell[][] readInput() {
@@ -52,6 +52,7 @@ public class Spreadsheet{
 
         // use the input to populate the array of Cells
         for (int i=0; i < rows; i++) {
+
             for (int j=0; j < cols; j++) {
                 String next = in.nextLine();
                 input[cols*i+j] = next; 
@@ -59,7 +60,7 @@ public class Spreadsheet{
             }
         }
 
-        System.out.printf("\nYour input:\n");
+        System.out.println("\nYour input:");
         for (String s : input) {
             System.out.println(s);
         }
@@ -73,9 +74,42 @@ public class Spreadsheet{
                System.out.println(cells[i][j]);
     }
 
+    public static void runMain() {
+        Cell[][] cells = readInput();
+        for (int i=0; i < cells.length; i++)
+            for (int j=0; j < cells[0].length; j++)
+                break;// eval(cell);
+    }
+
+    // main eval function
+    // if its a literal - do nothing
+    // if its a expression - make a list of its dependencies, and eval those recursively
+    // updates a "visited" list of "nodes" (cells) to check for cycles
+
+    public static HashSet visited = new HashSet();
+
+    public static void eval(Cell rootCell) {
+        if (rootCell.isLiteral())
+            return;
+        else {
+            // reset the hashset first
+            HashSet visited = new HashSet();
+            // go through the arraylist of dependencies, and use the helper eval on each
+            for (String s: rootCell.getDependencies()) {
+                // convert string to actual dependent node
+                // then call helper eval on that
+                break;
+            }
+           
+        }
+         
+    }
+
     public static void main(String[] args) {
         testCellConstructor();
         Cell[][] cells = readInput();
         debugDisplayCells(cells);
+
+        System.out.println(getCharForNumber(0));
     }
 }
