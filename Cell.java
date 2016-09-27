@@ -7,7 +7,8 @@ public class Cell {
     // literal as in 3, or literal as in 4/3
     // make sure variables set corretly with constructor TODO
     private String strExpr;
-    private double val;
+    public static double DEFAULT_VAL = 0.0;
+    private double val = DEFAULT_VAL;
     private ArrayList<String> dependencies; // we want easy resizing of this
 
     public Cell(String strExpr) {
@@ -16,12 +17,6 @@ public class Cell {
         this.literal = true;
         this.dependencies = new ArrayList<String>();
         String[] words = strExpr.split(" ");
-
-        if (words.length == 1) { 
-            // just a number
-            this.val = Double.parseDouble(words[0]); 
-            return;
-        }
 
         for (int i=0; i<words.length; i++) {
             char c = words[i].charAt(0);
@@ -32,6 +27,12 @@ public class Cell {
             }
             else if (isOperator(c))
                 this.literal = false; // not just a number then...
+        }
+
+        if (this.literal && words.length == 1) { 
+            // just a number
+            this.val = Double.parseDouble(words[0]); 
+            return;
         }
     }
 
@@ -78,5 +79,16 @@ public class Cell {
         if (s == '+' || s == '-' || s == '*' || s == '/')
             return true;    
         return false;
+    }
+    public boolean updateLiteral() {
+        String[] words = this.strExpr.split(" ");
+        for (int i=0; i<words.length; i++) {
+            char c = words[i].charAt(0);
+            if (( c >= (int)'A' && c <= (int)'Z' ) || (isOperator(c))) {
+                return false;
+            }
+        }
+        this.val = Double.parseDouble(words[0]);
+        return true;
     }
 }

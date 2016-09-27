@@ -23,7 +23,6 @@ public class Spreadsheet{
         return false;
     }
 
-
     // using ASCII representation for converting "row 0" to row A
     private static String getStrForNumber(int i) {
         return String.valueOf((char)(i + 65));
@@ -36,7 +35,6 @@ public class Spreadsheet{
     public static Cell[][] readInput() {
         Scanner in = new Scanner(System.in);
 
-        System.out.print("spreadsheet size: ");
         String spreadParams = in.nextLine(); 
         String[] params = spreadParams.split(" ");
 
@@ -66,7 +64,6 @@ public class Spreadsheet{
 
                 // use cellString to map each Cell to a string for O(1) lookup
                 String cellString = rowChar + String.valueOf(j+1);
-                // System.out.print(cellString);
                 locationMap.put(cellString, cells[i][j]);
             }
         }
@@ -105,7 +102,7 @@ public class Spreadsheet{
             //return cell.getVal();
         else if (rootCell.getDependencies().size() > 0) {
             if (visited.contains(rootCell)) {
-                System.out.println("CYCLE FOUND TODO");
+                return;
             }
             visited.add(rootCell);
             // go through the arraylist of dependencies, and use the helper eval on each
@@ -114,6 +111,19 @@ public class Spreadsheet{
                 // then call helper eval on that
                 Cell dependent = locationMap.get(s);
                 eval(dependent);
+                System.out.println(dependent);
+                System.out.println(dependent.getVal());
+
+                // now for every instance of that string in strExpr, replace
+                StringBuilder updated = new StringBuilder();
+                for (String word: rootCell.getStrExpr().split(" ")) {
+                    if (word.equals(s))
+                        updated.append(dependent.getVal());
+                    else
+                        updated.append(word);
+                }
+                rootCell.setStrExpr(updated.toString());
+                rootCell.updateLiteral();
             }
         }
         else {
@@ -141,7 +151,6 @@ public class Spreadsheet{
                 double result = Integer.MAX_VALUE; // some default
                 if (word.equals("+")){
                     result = op1 + op2;
-                    
                 }
                 else if (word.equals("-"))
                     result = op1 - op2;
@@ -162,11 +171,7 @@ public class Spreadsheet{
         throw new IllegalArgumentException("bad row/col input"); 
     }
 
-
     public static void main(String[] args) {
-        // testCellConstructor();
-        // Cell[][] cells = readInput();
-        // debugDisplayCells(cells);
         runMain();
     }
 }
