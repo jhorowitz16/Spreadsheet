@@ -24,15 +24,14 @@ public class Spreadsheet{
         return true;
     }
 
-    public static void readInput() {
-
-        
+    // return a 2d array of cells based on the input
+    public static Cell[][] readInput() {
         Scanner in = new Scanner(System.in);
 
         System.out.print("spreadsheet size: ");
         String spreadParams = in.nextLine(); 
         String[] params = spreadParams.split(" ");
-        
+
         // do error checking here later...
         int rows = -1;
         int cols = -1;
@@ -48,12 +47,16 @@ public class Spreadsheet{
 
         System.out.println("rows: " + rows + ", " + "cols: " + cols);
 
-
         String[] input = new String[rows*cols];
-        // in.nextLine(); // deal with the extra enter
+        Cell[][] cells = new Cell[rows][cols];
 
-        for (int i=0; i < input.length; i++) {
-            input[i] = in.nextLine();
+        // use the input to populate the array of Cells
+        for (int i=0; i < rows; i++) {
+            for (int j=0; j < cols; j++) {
+                String next = in.nextLine();
+                input[cols*i+j] = next; 
+                cells[i][j] = new Cell(next);
+            }
         }
 
         System.out.printf("\nYour input:\n");
@@ -61,13 +64,18 @@ public class Spreadsheet{
             System.out.println(s);
         }
 
+        return cells;
     }
 
+    public static void debugDisplayCells(Cell[][] cells) {
+       for (int i=0; i < cells.length; i++)
+           for (int j=0; j < cells[0].length; j++)
+               System.out.println(cells[i][j]);
+    }
 
     public static void main(String[] args) {
-        System.out.println("Hello World");
         testCellConstructor();
-        readInput();
+        Cell[][] cells = readInput();
+        debugDisplayCells(cells);
     }
-
 }
